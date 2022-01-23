@@ -1,55 +1,91 @@
-import { useRef, useEffect } from "react";
-import logo from "./logo.svg";
+import { useRef, useEffect, useState } from "react";
 import "./App.css";
 
 import { TweenMax, Power3 } from "gsap";
 
 function App() {
- let logoItem = useRef(null);
- let text = useRef(null);
+ let circle1 = useRef(null);
+ let circle2 = useRef(null);
+ let circle3 = useRef(null);
+ const [clicked, setClicked] = useState(false);
+
+ const expandHandler = () => {
+  setClicked(true);
+
+  TweenMax.to(circle2, 1, {
+   width: 200,
+   height: 200,
+   ease: Power3.easeInOut,
+  });
+ };
+
+ const srinkHandler = () => {
+  setClicked(false);
+  TweenMax.to(circle2, 1, {
+   width: 75,
+   height: 75,
+   ease: Power3.easeInOut,
+  });
+ };
 
  useEffect(() => {
-  TweenMax.to(logoItem, 2, {
-   y: -20,
-   scale: 1,
-   duration: Power3.easeInOut,
-  });
-
-  TweenMax.to(text, 0.8, {
-   y: -20,
-   opacity: 1,
-   duration: Power3.easeInOut,
-   stagger: 1,
-  });
+  // * The bellow code can do the job but This is not a good practice
+  //   TweenMax.from(circle1, 1, {
+  //    opacity: 0,
+  //    x: 40,
+  //    ease: Power3.easeInOut,
+  //   });
+  //   TweenMax.from(circle2, 1, {
+  //    opacity: 0,
+  //    x: 40,
+  //    ease: Power3.easeInOut,
+  //    delay: 0.2,
+  //   });
+  //   TweenMax.from(circle3, 1, {
+  //    opacity: 0,
+  //    x: 40,
+  //    ease: Power3.easeInOut,
+  //    delay: 0.4,
+  //   });
+  // * Instead I use staggerFrom
+  TweenMax.staggerFrom(
+   [circle1, circle2, circle3],
+   1,
+   {
+    opacity: 0,
+    x: 40,
+    ease: Power3.easeInOut,
+   },
+   0.2
+  );
  }, []);
-
  return (
   <div className="App">
-   <header className="App-header">
-    <img
+   <div className="header">
+    <h1>Stagger Animations</h1>
+    <p>Click on the yellow ballon to expand it</p>
+   </div>
+   <div className="circle-container">
+    <div
      ref={(el) => {
-      logoItem = el;
+      circle1 = el;
      }}
-     src={logo}
-     className="App-logo"
-     alt="logo"
-    />
-    <p
+     className="circle circle-1"
+    ></div>
+    <div
      ref={(el) => {
-      text = el;
+      circle2 = el;
      }}
-    >
-     Edit <code>src/App.js</code> and save to reload.
-    </p>
-    {/* <a
-     className="App-link"
-     href="https://reactjs.org"
-     target="_blank"
-     rel="noopener noreferrer"
-    >
-     Learn React
-    </a> */}
-   </header>
+     className="circle circle-2"
+     onClick={clicked ? srinkHandler : expandHandler}
+    ></div>
+    <div
+     ref={(el) => {
+      circle3 = el;
+     }}
+     className="circle circle-3"
+    ></div>
+   </div>
   </div>
  );
 }
