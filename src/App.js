@@ -21,7 +21,7 @@ function App() {
 
  const srinkHandler = () => {
   setClicked(false);
-  TweenMax.to(circle2, 1, {
+  TweenMax.to(circle2, 0.5, {
    width: 75,
    height: 75,
    ease: Power3.easeInOut,
